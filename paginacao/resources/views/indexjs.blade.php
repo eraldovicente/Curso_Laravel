@@ -19,7 +19,9 @@
                     Tabela de clientes
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Exibindo tabela</h5>
+                    <h5 class="card-title" id="cardTitle">
+                        Exibindo tabela
+                    </h5>
                     <table class="table table-hover" id="tabelaClientes">
                         <thead>
                                 <th scope="col">#</th>
@@ -62,18 +64,52 @@
         <script src="{{asset('js/app.js')}}" type="text/javascript"></script>
         <script type="text/javascript">
 
+            function getItemProximo(data) {
+                i = data.current_page + 1;
+                if ( data.last_page == data.current_page)
+                    s = ' <li class="page-item" disabled>';
+                else
+                    s = '<li class="page-item">';
+                    s += '<a class="page-link" ' + 'pagina="' + i + '" href="javascript:void(0);">Próximo</a></li>';
+                    return s;
+            }
+
+            function getItemAnterior(data) {
+                i = data.current_page - 1;
+                if ( 1 == data.current_page)
+                    s = ' <li class="page-item" disabled>';
+                else
+                    s = '<li class="page-item">';
+                    s += '<a class="page-link" ' + 'pagina="' + i + '" href="javascript:void(0);">Anterior</a></li>';
+                    return s;
+            }
+
             function getItem(data, i) {
                 if ( i == data.current_page)
                     s = ' <li class="page-item active" aria-current="page">';
                 else
                     s = '<li class="page-item">';
-                    s += '<a class="page-link" href="#">' + i + '</a></li>';
+                    s += '<a class="page-link" ' + 'pagina="' + i + '" href="javascript:void(0);">' + i + '</a></li>';
                     return s;
             }
+
             function montarPaginator(data) {
-                for (let i = 1; i < data.total; i++) {
-                    s = getItem(data, i);
+                $('#paginator>ul>li').remove();
+                $("#paginator>ul").append(getItemAnterior(data));
+                n = 20;
+                if (data.current_page - n/2 <= 1) {
+                    inicio = 1;
+                } else if(data.last_page - data.current_page < n) {
+                    inicio = data.last_page - n + 1;
+                } else {
+                    inicio = data.current_page - n/2;
                 }
+                fim = inicio + n - 1;
+                for (let i = inicio; i <= fim; i++) {
+                    s = getItem(data, i);
+                    $("#paginator>ul").append(s);
+                }
+                $("#paginator>ul").append(getItemProximo(data));
             }
 
             function montarLinha(cliente) {
@@ -98,12 +134,19 @@
                     console.log(resp);
                     montarTabela(resp);
                     montarPaginator(resp);
+                    $("#paginator>ul>li>a").click(function(){
+                        carregarClientes( $(this).attr('pagina') );
+                    });
+                    $("#cardTitle").html("Exibindo " + resp.per_page +
+                        " clientes de " + resp.total +
+                        "(" + resp.from + " a " + resp.to + ")"
+                    );
                 });
             }
 
 
             $(function() {
-                carregarClientes(2);
+                carregarClientes(10);
             });
         </script>
     </body>
