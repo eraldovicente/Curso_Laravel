@@ -12,13 +12,12 @@ export class PostDialogComponent implements OnInit {
   private nomearquivo: string = '';
 
   private dados = {
-    post: new Post("", "", "", "", ""),
+    post: new Post("", "", "", "", "", ""),
     arquivo: null
   };
 
   constructor(
-    public dialogref: MatDialogRef<PostDialogComponent>
-  ) { }
+    public dialogref: MatDialogRef<PostDialogComponent>) { }
 
   ngOnInit() {
   }
@@ -36,5 +35,4 @@ export class PostDialogComponent implements OnInit {
   cancelar() {
     this.dialogref.close(null);
   }
-
 }

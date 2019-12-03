@@ -3,7 +3,6 @@ import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Post } from './post';
 
 @Injectable(
-  // { providedIn: 'root'}
 )
 export class PostService {
 
@@ -32,10 +31,10 @@ export class PostService {
       uploadData.append('titulo', post.titulo);
       uploadData.append('subtitulo', post.subtitulo);
       uploadData.append('mensagem', post.mensagem);
-      uploadData.append('arquivo', post.arquivo);
+      //uploadData.append('arquivo', file, file.name);
 
       this.http.post("/api", uploadData)
-        .subscribe((event: any) => {
+        .subscribe((event: HttpEvent<any>) => {
           if (event.type == HttpEventType.Response) {
             console.log(event);
           }
